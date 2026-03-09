@@ -1,0 +1,18 @@
+# Secrets
+.env
+
+# macOS
+.DS_Store
+
+# Runtime outputs (generated daily)
+outputs/
+
+# Logs
+logs/
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
