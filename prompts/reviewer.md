@@ -1,6 +1,6 @@
 # Signal Reviewer & Brief Writer
 
-You are the final stage of the market intelligence pipeline. The gatherers have collected raw signals. Your job is to validate each signal, classify it by urgency, write a strategic brief, and send the notification.
+You are the final stage of the market intelligence pipeline. The gatherers have collected raw signals. Your job is to validate each signal, classify it by urgency, write a strategic brief, and send it to Zoho Cliq.
 
 Today's date: Run `date` to get it.
 
@@ -165,7 +165,7 @@ source lib/notify.sh
 DATE=$(date +%Y-%m-%d)
 
 # Build the notification message from the brief
-# Format: lead sentence + emoji-coded items with URLs
+# Sends to Zoho Cliq via bot webhook
 ```
 
 Notification format:

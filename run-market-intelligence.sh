@@ -1,18 +1,24 @@
 #!/bin/bash
 # PM Market Intelligence — Daily Runner
-# Runs the 3-stage pipeline: Community Gatherer → Web Gatherer → Reviewer & Brief
+# ─────────────────────────────────────────────────────────────────────────────
+# Runs the 3-stage pipeline:
+#   Stage 1: Community Gatherer  → Reddit + LinkedIn signals
+#   Stage 2: Web Gatherer        → HN, GitHub, Product Hunt, Dev.to signals
+#   Stage 3: Reviewer            → validate, classify, write brief, send Cliq
 #
-# Usage: bash run.sh
+# Usage:
+#   bash run-market-intelligence.sh
 #
 # Schedule with cron:
 #   crontab -e
-#   0 7 * * * cd /path/to/pm-market-intel && bash run.sh >> logs/cron.log 2>&1
+#   0 7 * * * cd /path/to/pm-market-intel && bash run-market-intelligence.sh >> logs/cron.log 2>&1
+# ─────────────────────────────────────────────────────────────────────────────
 
 set -o pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DATE=$(date +%Y-%m-%d)
-LOG_FILE="$REPO_DIR/logs/run-${DATE}.log"
+LOG_FILE="$REPO_DIR/logs/market-intelligence-${DATE}.log"
 
 # ─── Colors ──────────────────────────────────────────────────────────────────
 GREEN="\033[0;32m"
@@ -30,7 +36,7 @@ err() { echo -e "[$(date '+%H:%M:%S')] ${RED}[ERROR]${RESET} $1" | tee -a "$LOG_
 mkdir -p "$REPO_DIR/outputs/signals" "$REPO_DIR/outputs/briefs" "$REPO_DIR/logs"
 
 if [ ! -f "$REPO_DIR/config.yaml" ]; then
-  err "config.yaml not found. Run 'bash setup.sh' first."
+  err "config.yaml not found. Run 'bash setup-new-pm.sh' first."
   exit 1
 fi
 
@@ -79,7 +85,7 @@ if [ -f "$BRIEF_FILE" ]; then
   exit 0
 fi
 
-log "════════════════════════════════════════"
+log "═══════════════════════════════════════════════"
 log "Starting daily market intelligence — $DATE"
 
 # ─── Helper: run a Claude prompt ─────────────────────────────────────────────
@@ -110,7 +116,6 @@ if [ -f "$COMMUNITY_SIGNALS" ]; then
   log "Community signals already exist — skipping Stage 1."
 else
   run_stage "Community Gatherer" "$REPO_DIR/prompts/community.md"
-  STAGE1_EXIT=$?
 fi
 
 # ─── Stage 2: Web Gatherer ──────────────────────────────────────────────────
@@ -119,7 +124,6 @@ if [ -f "$WEB_SIGNALS" ]; then
   log "Web signals already exist — skipping Stage 2."
 else
   run_stage "Web Gatherer" "$REPO_DIR/prompts/web.md"
-  STAGE2_EXIT=$?
 fi
 
 # ─── Check we have at least one signal file ──────────────────────────────────
@@ -130,7 +134,6 @@ fi
 
 # ─── Stage 3: Reviewer & Brief Writer ───────────────────────────────────────
 run_stage "Signal Reviewer & Brief Writer" "$REPO_DIR/prompts/reviewer.md"
-STAGE3_EXIT=$?
 
 # ─── Done ────────────────────────────────────────────────────────────────────
 if [ -f "$BRIEF_FILE" ]; then
@@ -139,4 +142,4 @@ else
   warn "Brief file not found after run — check the log at $LOG_FILE"
 fi
 
-log "════ Pipeline complete ════"
+log "══ Pipeline complete ══"
