@@ -56,7 +56,20 @@ site:reddit.com "[domain keyword]" new tool OR launched OR "just tried"
 
 For any tool found that is NOT in the competitor list from CLAUDE.md — flag it as **New Entrant**.
 
-### Pass 3 — Brand monitoring
+### Pass 3 — Pattern subreddits
+
+If `data/active-watch-patterns.md` contains learned patterns, search the subreddits where those patterns were originally found. Common high-signal subreddits for developer/AI/platform signals:
+
+```
+site:reddit.com/r/mcp [pattern keywords]
+site:reddit.com/r/ClaudeAI [pattern keywords]
+site:reddit.com/r/LocalLLaMA [pattern keywords]
+site:reddit.com/r/ChatGPTCoding [pattern keywords]
+```
+
+Only search subreddits relevant to the PM's domain. Skip subreddits that don't match.
+
+### Pass 4 — Brand monitoring
 
 Search for mentions of the PM's own products:
 ```
