@@ -103,9 +103,29 @@ What happens:
 2. Maps the signal to your products (from `config.yaml`)
 3. Classifies it by tier (TIER 1 = immediate, TIER 2 = track, TIER 3 = background)
 4. Writes a structured signal file to `inbox/signals/`
-5. Sends a Cliq notification if configured
+5. **Extracts the underlying pattern** and stores it in a SQLite database
+6. Regenerates the watch list so future daily scans look for similar signals
+7. Sends a Cliq notification if configured
 
-Signal files are stored in `inbox/signals/` and can be reviewed alongside the daily briefs.
+### Pattern Learning
+
+The system doesn't just file one article — it **learns the pattern class.** For example, submitting an article about "MCP servers with 100+ tools causing LLM hallucination" teaches the system the pattern "MCP tool scaling and LLM degradation." Every future daily scan then watches for discussions, articles, or launches that match this pattern — even from sources the original article never mentioned.
+
+Patterns are stored in a SQLite database (`data/patterns.db`) and exported to `data/active-watch-patterns.md` for pipeline prompts.
+
+```bash
+# View all learned patterns
+bash submit-signal.sh --patterns
+
+# View learning stats
+bash submit-signal.sh --stats
+
+# Stop watching a pattern
+bash submit-signal.sh --deactivate 3
+
+# Manually regenerate the watch list
+bash submit-signal.sh --regenerate
+```
 
 ## File Structure
 
@@ -133,8 +153,13 @@ pm-market-intel/
 │   ├── roadmap-review.md
 │   ├── signal-intake.md       ← manual signal processing
 │   └── ux-audit-reviewer.md
+├── generate-watch-patterns.sh ← rebuild pattern watch list
 ├── lib/
-│   └── notify.sh             ← Zoho Cliq notification
+│   ├── notify.sh             ← Zoho Cliq notification
+│   └── patterns.sh           ← SQLite pattern learning functions
+├── data/
+│   ├── patterns.db           ← learned signal patterns (SQLite)
+│   └── active-watch-patterns.md ← exported watch list for pipeline
 ├── context/
 │   └── products/             ← your product context files
 ├── inbox/

@@ -20,11 +20,12 @@ If one is missing: proceed with what exists, note the gap.
 
 ---
 
-## Step 2 — Read product context
+## Step 2 — Read product context and learned patterns
 
 ```
 CLAUDE.md
 config.yaml
+data/active-watch-patterns.md
 ```
 
 Also read any product context files that exist:
@@ -32,7 +33,11 @@ Also read any product context files that exist:
 context/products/*.md
 ```
 
-You need this to connect signals to specific products and assess impact.
+You need CLAUDE.md and config.yaml to connect signals to specific products.
+You need active-watch-patterns.md to **check signals against learned patterns.** If a signal matches a learned pattern, it gets an automatic upgrade:
+- Weak evidence + pattern match → WATCH (not DISCARD)
+- Moderate evidence + pattern match → FLAG (consider ESCALATE)
+- Strong evidence + pattern match → ESCALATE
 
 ---
 
@@ -193,6 +198,22 @@ send_notification "$MESSAGE"
 
 ---
 
+## Step 8 — Record pattern matches
+
+If any signals matched learned patterns from `data/active-watch-patterns.md`, record the matches so the system tracks which patterns are actively producing signals:
+
+```bash
+source lib/patterns.sh
+
+# For each pattern that was matched by a signal today:
+record_match <pattern_id>
+
+# Log each signal that was included in the brief
+log_signal "<date>" "<url>" "<title>" "<tier>" "<matched_pattern_ids>" "<brief_file_path>" "pipeline"
+```
+
+---
+
 ## Quality gates before finishing
 
 - Every ESCALATE and FLAG connects to a specific product
@@ -200,3 +221,4 @@ send_notification "$MESSAGE"
 - No signal escalated on a single source alone
 - Inferences labeled explicitly
 - Strategic posture says something non-obvious
+- Pattern matches are recorded in the database

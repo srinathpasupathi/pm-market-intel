@@ -10,6 +10,9 @@ outputs/
 # Logs
 logs/
 
+# Pattern database (local, rebuilt from patterns)
+data/patterns.db
+
 # Python
 __pycache__/
 *.pyc

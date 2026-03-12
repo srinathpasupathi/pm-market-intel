@@ -13,10 +13,12 @@ Today's date: Run `date` to get it.
 ```
 CLAUDE.md
 config.yaml
+data/active-watch-patterns.md
 ```
 
 From CLAUDE.md: products, competitors, domain.
 From config.yaml: search queries for each source, competitor names.
+From active-watch-patterns.md: **learned patterns to watch for.** These are pain points and trends the PM has previously flagged as important. When searching, also include keywords from active patterns. If you encounter content matching a learned pattern, always include it as a signal — even if engagement is low. Note the matched pattern ID in the signal.
 
 ---
 

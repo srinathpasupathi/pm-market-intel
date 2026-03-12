@@ -85,6 +85,15 @@ if [ -f "$BRIEF_FILE" ]; then
   exit 0
 fi
 
+# ─── Initialize patterns DB and regenerate watch list ────────────────────────
+source "$REPO_DIR/lib/patterns.sh"
+if [ ! -f "$PATTERNS_DB" ]; then
+  init_patterns_db
+  log "Initialized patterns database."
+fi
+generate_watch_list >> "$LOG_FILE" 2>&1
+ok "Watch patterns loaded."
+
 log "═══════════════════════════════════════════════"
 log "Starting daily market intelligence — $DATE"
 

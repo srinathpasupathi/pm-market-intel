@@ -17,10 +17,12 @@ Read these files for context on what to search for:
 ```
 CLAUDE.md
 config.yaml
+data/active-watch-patterns.md
 ```
 
 From CLAUDE.md: what products and competitors to track.
 From config.yaml: which subreddits to search, brand terms, competitor names.
+From active-watch-patterns.md: **learned patterns to watch for.** These are pain points and trends the PM has previously flagged as important. If you encounter content matching a learned pattern, always include it as a signal — even if it would otherwise seem too niche. Note the matched pattern ID in the signal.
 
 ---
 
